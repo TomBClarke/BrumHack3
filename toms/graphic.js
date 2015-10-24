@@ -28,7 +28,7 @@ var graphic = new (function() {
         // Create the force layout
         force = d3.layout.force()
             // How much nodes attract/repel eachother
-            .charge(-100)
+            .charge(-800)
             .size([width, height]);
 
         // Create graphics element, and set dimensions
@@ -57,16 +57,15 @@ var graphic = new (function() {
             .attr("class", "gnode");
 
         // Create the circles
-        var circle = node.append("circle")
+        var circle = node
+            .append("circle")
             .attr("class", "node")
             // Set the radius to be the sum of two trusts (see function)
             .attr("r", getRadius)
             // Fills it with the right colour (depends on it's index, see above)
-            .style('fill', function() {
-                return '#333333';
-            })
+            .style('fill', '#FFF')
             // Set the border
-            .style("stroke", "black")
+            .style("stroke", "white")
             .style("stroke-width", "1px")
             .on("mousedown", function(d) {
                 var sel = d3.select(this.parentNode);
@@ -77,6 +76,20 @@ var graphic = new (function() {
                 sel.moveToFront();
             })
             // Start the dragging
+            .call(force.drag);
+
+        var image = node
+            .append("image")
+            .attr("width", function(d){ return getRadius(d) * 2.2; })
+            .attr("height", function(d){ return getRadius(d) * 2.2; })
+            .attr("xlink:href", function(d) {
+                return d.img;
+            })
+            .on("mousedown", function(d) {
+                var sel = d3.select(this.parentNode);
+                sel.moveToFront();
+                // window.open(d.link, '_blank');
+            })
             .call(force.drag);
 
         // Add the labels
@@ -94,7 +107,7 @@ var graphic = new (function() {
             // Set the text to be centred
             .attr("text-anchor", "middle")
             //Text colour:
-            .attr('fill','red')
+            .attr('fill','white')
             .on("mousedown", function(d) {
                 var sel = d3.select(this.parentNode);
                 sel.moveToFront();
@@ -114,11 +127,10 @@ var graphic = new (function() {
 
     // Sums the two trusts, and scales it appropriately
     function getRadius(d) {
-        var totalNodeValue = 0.0;
-        for(var i = 0; i < nodes.length; i++){
-            totalNodeValue += nodes[i].perc;
-        }
-        return (width + height) * (d.perc / totalNodeValue);
+        var size = d.perc * 100;
+        if (size < 50)
+            size = 50;
+        return size;
     }
     
     // Collision code
@@ -165,6 +177,9 @@ var graphic = new (function() {
         d3.selectAll("text")
             .attr("x", function(d) { return d.x; })
             .attr("y", function(d) { return d.y; });
+        d3.selectAll("image")
+            .attr("x", function(d) { return d.x - getRadius(d); })
+            .attr("y", function(d) { return d.y - getRadius(d) - 10; });
     }
     
     function boundPosition(value, min, max) {
