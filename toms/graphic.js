@@ -119,7 +119,10 @@ var graphic = new (function() {
             .text(function(d) { return d.title; })
             .call(force.drag);
 
-        force.on("tick", tick);
+        setTimeout(function() {
+            force.on("tick", tick);
+            $('#elucidateGraphic').fadeIn(1500);
+        }, 1500);
     }
     
     this.destroy = function() {
@@ -198,16 +201,21 @@ var graphic = new (function() {
     }
 
     function expand(d) {
+        $('#detail_holder').hide();
+        $('#detail_table').hide();
+
         $('#detail_holder').css('left', d.x - 150);
         $('#detail_holder').css('top', d.y - 150);
 
-        $('#detail_holder').hide();
-        $('#detail_table').hide();
         $('#detail_title').text(d.title);
         $('#detail_img').attr('src', d.img);
         $('#detail_descr').text(d.description);
         $('#detail_link').attr('href', d.link);
+        
         $('#detail_holder').fadeIn();
+        $('#detail_holder').animate({ left: width / 2 } );
+        $('#detail_holder').animate({ top: height / 2 } );
+
         setTimeout(function() {
             $('#detail_table').fadeIn();
         }, 100);
