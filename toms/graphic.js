@@ -4,6 +4,8 @@ var graphic = new (function() {
     // D3 force layout of graph
     var force;
 
+    var lastClick = new Date().getTime();
+
     var width, height;
     
     this.loadGraphic = function() {
@@ -29,7 +31,7 @@ var graphic = new (function() {
         force = d3.layout.force()
             // How much nodes attract/repel eachother
             .charge(-800)
-            .size([width, height]);
+            .size([innerWidth, height]);
 
         // Create graphics element, and set dimensions
         var svg = d3.select(".graphic#elucidateGraphic").append("svg").style('height', height).style('width', width);
@@ -55,6 +57,21 @@ var graphic = new (function() {
             // Wouldn't need if just circle/text.
             .append("g")
             .attr("class", "gnode");
+        
+        //Add img
+        var image = node
+            .append("image")
+            .attr("width", function(d){ return getRadius(d) * 2.2; })
+            .attr("height", function(d){ return getRadius(d) * 2.2; })
+            .style('border-radius', '50%')
+            .attr("xlink:href", function(d) {
+                return d.img;
+            })
+            .on("mousedown", function(d) {
+                var sel = d3.select(this.parentNode);
+                sel.moveToFront();
+            })
+            .call(force.drag);
 
         // Create the circles
         var circle = node
@@ -71,28 +88,11 @@ var graphic = new (function() {
                 }
             })
             .on("mousedown", function(d) {
-                var sel = d3.select(this.parentNode);
-                sel.moveToFront();
-                expand(d);
+                clickOn(d, this);
             })
             // Start the dragging
             .call(force.drag);
 
-        //Add img
-        var image = node
-            .append("image")
-            .attr("width", function(d){ return getRadius(d) * 2.2; })
-            .attr("height", function(d){ return getRadius(d) * 2.2; })
-            .style('border-radius', '50%')
-            .attr("xlink:href", function(d) {
-                return d.img;
-            })
-            .on("mousedown", function(d) {
-                var sel = d3.select(this.parentNode);
-                sel.moveToFront();
-                expand(d);
-            })
-            .call(force.drag);
 
         // Add the labels
         var labels = node
@@ -101,19 +101,14 @@ var graphic = new (function() {
             .attr("class", "unselectable")
             .attr("dy", ".35em")
             .style("font-size", function(d) {
-                var size = d.perc * 50;
-                if (size < 20)
-                    size = 20;
-                return size + 'px';
+                clickOn(d, this);
             })
             // Set the text to be centred
             .attr("text-anchor", "middle")
             //Text colour:
             .attr('fill','white')
             .on("mousedown", function(d) {
-                var sel = d3.select(this.parentNode);
-                sel.moveToFront();
-                expand(d);
+                clickOn(d, this);
             })
             // Set the label content
             .text(function(d) { return d.title; })
@@ -128,6 +123,16 @@ var graphic = new (function() {
     this.destroy = function() {
         if(force)
             force.stop();
+    }
+
+    function clickOn(d, _this) {
+        var sel = d3.select(_this.parentNode);
+        sel.moveToFront();
+
+        var date = new Date();
+        var diff = date.getTime() - lastClick;
+        if (diff > 1000 )
+            expand(d);
     }
 
     // Sums the two trusts, and scales it appropriately
@@ -178,13 +183,13 @@ var graphic = new (function() {
         
         d3.selectAll("circle")
             .attr("cx", function(d) { return d.x; })
-            .attr("cy", function(d) { return d.y; });
+            .attr("cy", function(d) { return d.y - 100; });
         d3.selectAll("text")
             .attr("x", function(d) { return d.x; })
-            .attr("y", function(d) { return d.y; });
+            .attr("y", function(d) { return d.y - 100; });
         d3.selectAll("image")
             .attr("x", function(d) { return d.x - getRadius(d); })
-            .attr("y", function(d) { return d.y - getRadius(d) - 10; });
+            .attr("y", function(d) { return d.y - getRadius(d) - 10 - 100; });
     }
     
     function boundPosition(value, min, max) {
@@ -201,20 +206,28 @@ var graphic = new (function() {
     }
 
     function expand(d) {
+        var size = 100;
+
         $('#detail_holder').hide();
         $('#detail_table').hide();
 
-        $('#detail_holder').css('left', d.x - 150);
-        $('#detail_holder').css('top', d.y - 150);
+        $('#detail_holder').css('left', d.x  - size);
+        $('#detail_holder').css('top', d.y - size);
 
         $('#detail_title').text(d.title);
-        $('#detail_img').attr('src', d.img);
         $('#detail_descr').text(d.description);
         $('#detail_link').attr('href', d.link);
         
-        $('#detail_holder').fadeIn();
-        $('#detail_holder').animate({ left: width / 2 } );
-        $('#detail_holder').animate({ top: height / 2 } );
+        $('#detail_holder').css('width', 20);
+        $('#detail_holder').css('height', 20);
+        $('#detail_holder').show();
+        // $('#detail_holder').fadeIn();
+        $('#detail_holder').animate({
+            left: (width / 2) - (size * 4 / 3),
+            top: (height / 8 * 7) - (size * 2),
+            width: (size * 2),
+            height: (size * 2)
+        });
 
         setTimeout(function() {
             $('#detail_table').fadeIn();
@@ -222,7 +235,7 @@ var graphic = new (function() {
     }
 
     this.contract = function() {
-       $('#detail_table').fadeOut();
        $('#detail_holder').fadeOut();
+       $('#detail_table').fadeOut();
     }
 })();

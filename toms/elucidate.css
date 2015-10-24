@@ -37,7 +37,7 @@ body {
 #detail_table td {
 	text-align: center;
 	font-family: san-serif;
-	font-size: 2em;
+	font-size: 1em;
 	color: white;
 }
 
@@ -46,12 +46,7 @@ body {
 }
 
 #detail_descr {
-	max-width: 300px;
-}
-
-#detail_img {
-	max-height: 200;
-	max-width: 200;
+	max-width: 200px;
 }
 
 #detail_link {
@@ -59,9 +54,15 @@ body {
 }
 
 #detail_table button {
-	font-size: 0.5em;
+	background-color: white;
+	color: black;
+	border: none;
 }
 
 #elucidateGraphic {
 	width, height: 100%;
+}
+
+.pointerHand {
+	cursor: pointer;
 }
