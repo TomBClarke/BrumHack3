@@ -2,12 +2,41 @@
 <head>
     <title>Tom's bit</title>
     <script src="d3.min.js"></script>
+    <script src="jquery.js"></script>
     <script src="graphic.js"></script>
-    <style type="text/css" rel="stylesheet" href="graphic.css"></style>
+    <link type="text/css" rel="stylesheet" href="elucidate.css"/>
 </head>
 <body onload="graphic.loadGraphic();">
     <div class="graphicContainer">
-        <div class="graphic" id="elucidateGraphic" style="width, height: 800;">
+        <div class="graphic" id="elucidateGraphic">
+        </div>
+        <div id="detail_holder">
+            <table id="detail_table">
+                <tr>
+                    <td>
+                        <h1 id="detail_title"></h1>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <img id="detail_img" src=""></img>
+                    </td>
+                </tr>
+                <tr>
+                    <td id="detail_descr">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a id="detail_link" target="_blank" href="https://www.wikipedia.org/">View more...</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button onclick="graphic.contract();">Close</button>
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
 </body>

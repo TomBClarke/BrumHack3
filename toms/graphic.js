@@ -8,19 +8,19 @@ var graphic = new (function() {
     
     this.loadGraphic = function() {
         var nodes = [
-            { "title": "test01", "img": "http://tombclarke.co.uk/res/img/me_circle.png", "description": "some words about the thing", "perc": 0.1, "link": "http://google.com" },
-            { "title": "test02", "img": "http://tombclarke.co.uk/res/img/me_circle.png", "description": "some words about the thing", "perc": 0.2, "link": "http://google.com" },
-            { "title": "test03", "img": "http://tombclarke.co.uk/res/img/me_circle.png", "description": "some words about the thing", "perc": 0.3, "link": "http://google.com" },
-            { "title": "test04", "img": "http://tombclarke.co.uk/res/img/me_circle.png", "description": "some words about the thing", "perc": 0.4, "link": "http://google.com" },
-            { "title": "test05", "img": "http://tombclarke.co.uk/res/img/me_circle.png", "description": "some words about the thing", "perc": 0.5, "link": "http://google.com" },
-            { "title": "test06", "img": "http://tombclarke.co.uk/res/img/me_circle.png", "description": "some words about the thing", "perc": 0.6, "link": "http://google.com" },
-            { "title": "test07", "img": "http://tombclarke.co.uk/res/img/me_circle.png", "description": "some words about the thing", "perc": 0.7, "link": "http://google.com" },
-            { "title": "test08", "img": "http://tombclarke.co.uk/res/img/me_circle.png", "description": "some words about the thing", "perc": 0.8, "link": "http://google.com" },
-            { "title": "test09", "img": "http://tombclarke.co.uk/res/img/me_circle.png", "description": "some words about the thing", "perc": 0.9, "link": "http://google.com" }
+            { "title": "test01", "img": "http://tombclarke.co.uk/res/img/me_full.png", "description": "some words about the thing", "perc": 0.1, "link": "http://google.com" },
+            { "title": "test02", "img": "http://tombclarke.co.uk/res/img/uob_front.png", "description": "some words about the thing", "perc": 0.2, "link": "http://google.com" },
+            { "title": "test03", "img": "http://tombclarke.co.uk/res/img/uob_front.png", "description": "some words about the thing", "perc": 0.3, "link": "http://google.com" },
+            { "title": "test04", "img": "http://tombclarke.co.uk/res/img/uob_front.png", "description": "some words about the thing", "perc": 0.4, "link": "http://google.com" },
+            { "title": "test05", "img": "http://tombclarke.co.uk/res/img/uob_front.png", "description": "some words about the thing", "perc": 0.5, "link": "http://google.com" },
+            { "title": "test06", "img": "http://tombclarke.co.uk/res/img/uob_front.png", "description": "some words about the thing", "perc": 0.6, "link": "http://google.com" },
+            { "title": "test07", "img": "http://tombclarke.co.uk/res/img/uob_front.png", "description": "some words about the thing", "perc": 0.7, "link": "http://google.com" },
+            { "title": "test08", "img": "http://tombclarke.co.uk/res/img/uob_front.png", "description": "some words about the thing", "perc": 0.8, "link": "http://google.com" },
+            { "title": "test09", "img": "", "description": "some words about the thing", "perc": 0.9, "link": "http://google.com" }
         ];
 
-        height = 800;
-        width = 800;
+        height = window.innerHeight;
+        width = window.innerWidth;
 
         // Create the colors
         var color = d3.scale.category20b();
@@ -62,33 +62,35 @@ var graphic = new (function() {
             .attr("class", "node")
             // Set the radius to be the sum of two trusts (see function)
             .attr("r", getRadius)
-            // Fills it with the right colour (depends on it's index, see above)
-            .style('fill', '#FFF')
-            // Set the border
-            .style("stroke", "white")
-            .style("stroke-width", "1px")
-            .on("mousedown", function(d) {
-                var sel = d3.select(this.parentNode);
-                sel.moveToFront();
+            // Fills the circle
+            .style('fill', function(d) {
+                if(d.img == "") {
+                    return getRandomColor();
+                } else {
+                    return "transparent";
+                }
             })
             .on("mousedown", function(d) {
                 var sel = d3.select(this.parentNode);
                 sel.moveToFront();
+                expand(d);
             })
             // Start the dragging
             .call(force.drag);
 
+        //Add img
         var image = node
             .append("image")
             .attr("width", function(d){ return getRadius(d) * 2.2; })
             .attr("height", function(d){ return getRadius(d) * 2.2; })
+            .style('border-radius', '50%')
             .attr("xlink:href", function(d) {
                 return d.img;
             })
             .on("mousedown", function(d) {
                 var sel = d3.select(this.parentNode);
                 sel.moveToFront();
-                // window.open(d.link, '_blank');
+                expand(d);
             })
             .call(force.drag);
 
@@ -111,7 +113,7 @@ var graphic = new (function() {
             .on("mousedown", function(d) {
                 var sel = d3.select(this.parentNode);
                 sel.moveToFront();
-                // window.open(d.link, '_blank');
+                expand(d);
             })
             // Set the label content
             .text(function(d) { return d.title; })
@@ -184,5 +186,35 @@ var graphic = new (function() {
     
     function boundPosition(value, min, max) {
         return Math.max(Math.min(value, max), min);
+    }
+
+    function getRandomColor() {
+        var letters = '0123456789ABCDEF'.split('');
+        var color = '#';
+        for (var i = 0; i < 6; i++ ) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+    function expand(d) {
+        $('#detail_holder').css('left', d.x - 150);
+        $('#detail_holder').css('top', d.y - 150);
+
+        $('#detail_holder').hide();
+        $('#detail_table').hide();
+        $('#detail_title').text(d.title);
+        $('#detail_img').attr('src', d.img);
+        $('#detail_descr').text(d.description);
+        $('#detail_link').attr('href', d.link);
+        $('#detail_holder').fadeIn();
+        setTimeout(function() {
+            $('#detail_table').fadeIn();
+        }, 100);
+    }
+
+    this.contract = function() {
+       $('#detail_table').fadeOut();
+       $('#detail_holder').fadeOut();
     }
 })();
