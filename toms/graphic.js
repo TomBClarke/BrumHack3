@@ -61,24 +61,28 @@ var graphic = new (function() {
         var defs = svg.append("defs").attr("id", "imgdefs");
 
         nodes.forEach(function(d, i) {
+            // var height, width;
             // $("<img/>").attr("src", d.img).load(function(){
-            //     alert( this.width +' '+ this.height );    
-            // }); 
+            //     height = this.height;    
+            //     width = this.width;    
+            //     console.log("height: " + height + ", width: " + width);
+            // });
 
-            var wh = 1;
-            var xy = 0;
-            var radiusmodifier = 2.2;
+            var wh = 2;
+            var xy2 = -40;
+            var xy1 = "0"
+            var radiusmodifier = 6;
 
             var catpattern = defs.append("pattern")
                 .attr("id", d.title)
                 .attr("height", wh)
                 .attr("width", wh)
-                .attr("x", "0")
-                .attr("y", "0");
+                .attr("x", xy1)
+                .attr("y", xy1);
 
             catpattern.append("image")
-                .attr("x", xy)
-                .attr("y", xy)
+                .attr("x", xy2 - (getRadius(d) * ((getRadius(d) > 70) ? 1.1 : 0.8 )))
+                .attr("y", xy2 - (getRadius(d) * 1.4))
                 .attr("height", getRadius(d) * radiusmodifier)
                 .attr("width", getRadius(d) * radiusmodifier)
                 .attr("xlink:href", d.img);
@@ -209,9 +213,6 @@ var graphic = new (function() {
         d3.selectAll("text")
             .attr("x", function(d) { return d.x; })
             .attr("y", function(d) { return d.y - modifier; });
-        // d3.selectAll("image")
-        //     .attr("x", function(d) { return d.x - getRadius(d); })
-        //     .attr("y", function(d) { return d.y - getRadius(d) - 10 - modifier; });
     }
     
     function boundPosition(value, min, max) {
@@ -234,7 +235,7 @@ var graphic = new (function() {
         $('#detail_table').hide();
 
         $('#detail_holder').css('left', d.x  - size);
-        $('#detail_holder').css('top', d.y - size);
+        $('#detail_holder').css('top', d.y - size - (height / 5));
 
         $('#detail_title').text(d.title);
         $('#detail_descr').text(d.description);
@@ -243,7 +244,7 @@ var graphic = new (function() {
         $('#detail_holder').css('width', 20);
         $('#detail_holder').css('height', 20);
         $('#detail_holder').show();
-        // $('#detail_holder').fadeIn();
+        
         $('#detail_holder').animate({
             left: (width / 2) - (size * 4 / 3),
             top: (height / 16 * 13) - (size * 2),
