@@ -1,0 +1,143 @@
+@media screen and (max-width:500px) {
+    body{
+        alignment: center;
+        height: 1000px;
+    }
+    div#topLevel
+    {
+        left:56%;
+        alignment: center;
+    }
+    div.buttonDiv
+    {
+        left:56%;
+        alignment: center;
+    }
+}
+
+div.brumHack{
+	position: fixed;
+	bottom: 80%;
+	left:41%;
+}
+
+div#controlPanel{
+	position: fixed;
+	bottom: 40%;
+	margin-top: 65%;
+	margin-left: 36%
+}
+
+div#banner{
+	position:fixed;
+	max-height:200px;
+	top: 0;
+}
+
+img.banner{
+	max-height: 200px;
+	position: absolute;
+}
+img#elucidateLogo{
+	position:static;
+	max-width: 400px;
+	max-height: 400px;
+}
+img#logo{
+	position:static;
+	max-width: 400px;
+	max-height: 400px;
+	background-image: url("clarifailogo2.jpg");
+	
+}
+img#powerbylogo{
+	position:static;
+	max-width: 400px;
+	max-height: 400px;
+}
+
+img#wikipedia{
+	position: static;
+	padding-left:100px;
+}
+
+h1{
+	position:static;
+	color: white;
+	display: inline;
+	margin-left: 15px;
+	margin-right: 15px;
+	padding-bottom: 10px;
+}
+
+#and{
+	position:absolute;
+	padding-top: 45px;
+}
+
+#wikipedia{
+	position: static;
+	max-height: 100px;
+	max-width: 100px;
+}
+
+body{
+    alignment: center;
+    background-image: url("sky2.jpg");
+    max-width:800px;
+    max-height:800px;
+    background-size: 100%;
+    position: relative;
+}
+div#motto{
+    text-align: center;
+    width: 200px;
+}
+div#topLevel{
+    left:50%;
+    alignment: center;
+    position: relative;
+    width: 200px;
+    text-align: center;
+    font-family: monospace;
+    font-weight:  bold;
+    font-size: large;
+    padding-top: 5%;
+    padding-bottom: 30%;
+}
+input.fileInput{
+    position:relative;
+    width: 200px;
+    height: 40px;
+    bottom: 35px;
+    text-decoration-color: black;
+    opacity: 0;
+}
+input.submit{
+    position:relative;
+    padding-top:20px;
+    margin-top:40px;
+    text-align:centre;
+}
+div#uploadButton{
+    position:relative;
+    text-align: center;
+    font-size : x-large;
+    text-decoration-color: black;
+}
+div.buttonDiv{
+    margin-left:70%; 
+    alignment: center;
+    background-color: darkgrey;
+    position:relative;
+    text-align: center;
+    width: 200px;
+    height: 40px;
+    border: ridge;
+}
+div.buttonDesc{
+    height: 30px;
+    background-color: darkgray;
+    position: relative;
+    text-align: center;
+}
