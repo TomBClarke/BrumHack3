@@ -58,20 +58,31 @@ var graphic = new (function() {
             .append("g")
             .attr("class", "gnode");
         
-        //Add img
-        var image = node
-            .append("image")
-            .attr("width", function(d){ return getRadius(d) * 2.2; })
-            .attr("height", function(d){ return getRadius(d) * 2.2; })
-            .style('border-radius', '50%')
-            .attr("xlink:href", function(d) {
-                return d.img;
-            })
-            .on("mousedown", function(d) {
-                var sel = d3.select(this.parentNode);
-                sel.moveToFront();
-            })
-            .call(force.drag);
+        var defs = svg.append("defs").attr("id", "imgdefs");
+
+        nodes.forEach(function(d, i) {
+            // $("<img/>").attr("src", d.img).load(function(){
+            //     alert( this.width +' '+ this.height );    
+            // }); 
+
+            var wh = 1;
+            var xy = 0;
+            var radiusmodifier = 2.2;
+
+            var catpattern = defs.append("pattern")
+                .attr("id", d.title)
+                .attr("height", wh)
+                .attr("width", wh)
+                .attr("x", "0")
+                .attr("y", "0");
+
+            catpattern.append("image")
+                .attr("x", xy)
+                .attr("y", xy)
+                .attr("height", getRadius(d) * radiusmodifier)
+                .attr("width", getRadius(d) * radiusmodifier)
+                .attr("xlink:href", d.img);
+        });
 
         // Create the circles
         var circle = node
@@ -84,8 +95,11 @@ var graphic = new (function() {
                 if(d.img == "") {
                     return getRandomColor();
                 } else {
-                    return "transparent";
+                    return "url(#" + d.title + ")";
                 }
+            })
+            .on("mouseup", function(d) {
+                clickOff(d);
             })
             .on("mousedown", function(d) {
                 clickOn(d, this);
@@ -107,6 +121,9 @@ var graphic = new (function() {
             .attr("text-anchor", "middle")
             //Text colour:
             .attr('fill','white')
+            .on("mouseup", function(d) {
+                clickOff(d);
+            })
             .on("mousedown", function(d) {
                 clickOn(d, this);
             })
@@ -129,9 +146,13 @@ var graphic = new (function() {
         var sel = d3.select(_this.parentNode);
         sel.moveToFront();
 
+        lastClick = new Date().getTime();
+    }
+
+    function clickOff(d) {
         var date = new Date();
         var diff = date.getTime() - lastClick;
-        if (diff > 1000 )
+        if (diff < 100 )
             expand(d);
     }
 
@@ -181,15 +202,16 @@ var graphic = new (function() {
             nodes[i].y = boundPosition(nodes[i].y, 0, height);
         }
         
+        var modifier = height / 5;
         d3.selectAll("circle")
             .attr("cx", function(d) { return d.x; })
-            .attr("cy", function(d) { return d.y - 100; });
+            .attr("cy", function(d) { return d.y - modifier; });
         d3.selectAll("text")
             .attr("x", function(d) { return d.x; })
-            .attr("y", function(d) { return d.y - 100; });
-        d3.selectAll("image")
-            .attr("x", function(d) { return d.x - getRadius(d); })
-            .attr("y", function(d) { return d.y - getRadius(d) - 10 - 100; });
+            .attr("y", function(d) { return d.y - modifier; });
+        // d3.selectAll("image")
+        //     .attr("x", function(d) { return d.x - getRadius(d); })
+        //     .attr("y", function(d) { return d.y - getRadius(d) - 10 - modifier; });
     }
     
     function boundPosition(value, min, max) {
@@ -224,7 +246,7 @@ var graphic = new (function() {
         // $('#detail_holder').fadeIn();
         $('#detail_holder').animate({
             left: (width / 2) - (size * 4 / 3),
-            top: (height / 8 * 7) - (size * 2),
+            top: (height / 16 * 13) - (size * 2),
             width: (size * 2),
             height: (size * 2)
         });
