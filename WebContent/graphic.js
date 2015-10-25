@@ -3,14 +3,19 @@ var graphic = new (function() {
     // Holds data
     audio["walk"] = new Audio();
     var x = Math.round(Math.random()*2);
+    alert(x);
     if(x==0)
     {	
-    	audio["walk"].src = "http://www.filldisk.com/trololo.mp3"
+    	audio["walk"].src = "http://www.filldisk.com/trololo.mp3";
     }
     if(x==1)
     {
-    	audio["walk"].src = "finalcutcut.mp3"
+    	audio["walk"].src = "finalcutcut.mp3";
     }
+    if(x==2)
+	{
+    	audio["walk"].src = "Super Mario Bros Official Theme Song cut.mp3";
+	}
     audio["walk"].play();
 
     var nodes = [];
