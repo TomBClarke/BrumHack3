@@ -19,22 +19,118 @@ $(document).ready(function(){
     });
 });
 **/
+var x;
+var imgString = "test";
+var name;
+var output = [];
 
-function wikifetch(s){
+function wikifetch(s) {
+    name = s
+    fetchimg(s);
+
+}
+
+function getIMG(data) {
+    for (var property in data) {
+        if (data.hasOwnProperty(property)) {
+            var nextX = data[property];
+            imgString = nextX.thumbnail.source;
+            //console.log(imgString);
+            //return imgString;
+        }
+    }
+    console.log(imgString);
+    output = output.push(imgString);
+    getTitle();
+}
+
+function fetchimg(s) {
+    callwikifetch(s, getIMG);
+
+    //var imgString = "";
+    //setTimeout(function() {
+    //    for (var property in x) {
+    //        if (x.hasOwnProperty(property)) {
+    //            var nextX = x[property];
+    //            imgString = nextX.thumbnail.source;
+    //            //console.log(imgString);
+    //            //return imgString;
+    //        }
+    //    }
+    //}, 1000);
+    //return "test";
+}
+
+function getTaD(data) {
+    var title;
+    var desc;
+    for (var property in data) {
+        if (data.hasOwnProperty(property)) {
+            var nextX = data[property];
+            title = nextX.title;
+            desc = nextX.extract;
+            //console.log(nextX);
+            //return imgString;
+        }
+    }
+
+    console.log(title);
+    console.log(desc);
+    output = output.push(title);
+    output = output.push(desc);
+    output = output.push("https://en.wikipedia.org/wiki/"+name);
+
+    /*THINGY GOES HERE!!!!!!!!!!!!!!!!!*/
+
+
+}
+
+function callwikifetch(s) {
 
     $.ajax({
         type: "GET",
-        url: "http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=" + s + "&callback=?",
+        url: "http://en.wikipedia.org/w/api.php?action=query&titles="+name+"&prop=pageimages&format=json&pithumbsize=100|&callback=?",
         contentType: "application/json; charset=utf-8",
         async: false,
         dataType: "json",
-        success: function (data, textStatus, jqXHR) {
-            var jason = data ;
-            jason["url"] = "https://en.wikipedia.org/wiki/"+s;
-            return jason;
+        success: function (data, textStatus, j) {
+            getIMG(data.query.pages);
+            //dealWithData(data.query.pages);
+            // imagejson = data ;
+            // /*jason["url"] = "https://en.wikipedia.org/wiki/"+s;*/
+            // console.log(data);
+            ///* document.write(data.parse.text["*"]);*/
+            // /*return jason;*/
         },
         error: function (errorMessage) {
         }
     });
+
 };
+
+function getTitle(){
+    $.ajax({
+        type: "GET",
+        url: "https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&titles=Stack%20Overflow&callback=?",
+        //url: "http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=extracts&exintro=&explaintext=&page="+name+"&callback=?",
+        contentType: "application/json; charset=utf-8",
+        async: false,
+        dataType: "json",
+        success: function (data, textStatus, jqXHR) {
+            console.log(data);
+            console.log(data.query.pages);
+            getTaD(data.query.pages);
+            //console.log(data.parse.text["*"]);
+            //console.log(data.parse.title);
+        },
+        error: function (errorMessage) {
+        }
+    });
+
+}
+
+//function dealWithData(data) {
+//    x = data;
+//}
+
 
