@@ -8,18 +8,14 @@ var graphic = new (function() {
 
     var width, height;
     
-    this.loadGraphic = function() {
-        var nodes = [
-            { "title": "test01", "img": "http://tombclarke.co.uk/res/img/me_full.png", "description": "some words about the thing", "perc": 0.1, "link": "http://google.com" },
-            { "title": "test02", "img": "http://tombclarke.co.uk/res/img/uob_front.png", "description": "some words about the thing", "perc": 0.2, "link": "http://google.com" },
-            { "title": "test03", "img": "http://tombclarke.co.uk/res/img/uob_front.png", "description": "some words about the thing", "perc": 0.3, "link": "http://google.com" },
-            { "title": "test04", "img": "http://tombclarke.co.uk/res/img/uob_front.png", "description": "some words about the thing", "perc": 0.4, "link": "http://google.com" },
-            { "title": "test05", "img": "http://tombclarke.co.uk/res/img/uob_front.png", "description": "some words about the thing", "perc": 0.5, "link": "http://google.com" },
-            { "title": "test06", "img": "http://tombclarke.co.uk/res/img/uob_front.png", "description": "some words about the thing", "perc": 0.6, "link": "http://google.com" },
-            { "title": "test07", "img": "http://tombclarke.co.uk/res/img/uob_front.png", "description": "some words about the thing", "perc": 0.7, "link": "http://google.com" },
-            { "title": "test08", "img": "http://tombclarke.co.uk/res/img/uob_front.png", "description": "some words about the thing", "perc": 0.8, "link": "http://google.com" },
-            { "title": "test09", "img": "", "description": "some words about the thing", "perc": 0.9, "link": "http://google.com" }
-        ];
+    this.loadGraphic = function(_nodes) {
+        var nodes = _nodes;
+        if(!nodes)
+            nodes = [
+                { "title": "test01", "img": "http://tombclarke.co.uk/res/img/me_full.png", "description": "some words about the thing", "perc": 0.7, "link": "http://google.com" },
+                { "title": "test08", "img": "http://tombclarke.co.uk/res/img/uob_front.png", "description": "some words about the thing", "perc": 0.8, "link": "http://google.com" },
+                { "title": "test09", "img": "", "description": "some words about the thing", "perc": 0.9, "link": "http://google.com" }
+            ];
 
         height = window.innerHeight;
         width = window.innerWidth;
@@ -244,7 +240,7 @@ var graphic = new (function() {
         $('#detail_holder').css('width', 20);
         $('#detail_holder').css('height', 20);
         $('#detail_holder').show();
-        
+
         $('#detail_holder').animate({
             left: (width / 2) - (size * 4 / 3),
             top: (height / 16 * 13) - (size * 2),
